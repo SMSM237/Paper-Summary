@@ -49,7 +49,7 @@ When a conclusion depends on an unresolved item, downgrade the claim rather than
 
 Identify the knowledge gap, hypothesis, biological/clinical question, samples and models, controls, cohort design, assays, endpoints, and causal chain. Express the chain compactly:
 
-`question → model/cohort → observation → mechanism candidate → perturbation/validation → translational implication`
+`question -> model/cohort -> observation -> mechanism candidate -> perturbation/validation -> translational implication`
 
 Evaluate model fitness for the question. Distinguish tumour-intrinsic effects from microenvironment-, immune-, vascular-, or pharmacokinetic-dependent effects. For patient-derived systems, keep patient count, model count, technical replicate count, and independent validation cohorts separate.
 
@@ -76,7 +76,7 @@ Place a short **Important concept** note immediately after the first result whos
 
 Assess the unit of analysis, biological versus technical replicates, `n` definition, controls, randomization/blinding where relevant, effect size and uncertainty, individual data display, test selection, multiple-testing control, pre-specified thresholds, missing-data handling, batch effects, and external validation. Do not condemn a study merely for a modest sample size; judge adequacy against the biological unit, effect size, and stated claim.
 
-Extract reproducibility-critical details without guessing: models/patients, inclusion/exclusion, culture matrix and medium, seeding density, drugs and concentrations, exposure time, assay endpoint, imaging and antibody/marker settings, preprocessing and software, statistics, repository accessions, and code/data availability. Mark absent information as `미기재`.
+Extract reproducibility-critical details without guessing: models/patients, inclusion/exclusion, culture matrix and medium, seeding density, drugs and concentrations, exposure time, assay endpoint, imaging and antibody/marker settings, preprocessing and software, statistics, repository accessions, and code/data availability. Mark absent information as `not reported`, translated into the report's output language.
 
 ### 5. Translate, critique, and propose
 
@@ -94,7 +94,7 @@ Write a reviewer-style assessment with major comments first. Each major comment 
 
 Use the YAML frontmatter and full reporting structure embedded below. Keep the report navigable:
 
-1. **Core**: title/metadata, one-sentence conclusion, five key takeaways, study logic, claim–evidence table, and concise verdict.
+1. **Core**: title/metadata, one-sentence conclusion, five key takeaways, study logic, claim-evidence table, and concise verdict.
 2. **Deep dive**: figure-by-figure and panel-by-panel interpretation, concepts placed in context, application ideas, and critical review.
 3. **Appendix**: methods/reproducibility extraction, statistics detail, concept index, source/access log, and coverage audit.
 
@@ -116,7 +116,7 @@ Before delivering, verify and report:
 
 ## Output and citation rules
 
-Use an Obsidian-compatible Markdown file with YAML frontmatter. Cite the paper and external metadata/supplement sources as direct links near the relevant claim. Clearly distinguish information obtained from the paper from external context. Use the following explicit uncertainty labels where appropriate: `PDF 해상도로 인해 판독 불가`, `본문 또는 범례에 미기재`, `보충자료 공개 접근 불가`, and `저자 설명을 바탕으로 한 해석`.
+Use an Obsidian-compatible Markdown file with YAML frontmatter. Cite the paper and external metadata/supplement sources as direct links near the relevant claim. Clearly distinguish information obtained from the paper from external context. Use the following canonical uncertainty labels, translated into the report's output language when appropriate: `unreadable at PDF resolution`, `not reported in the text or legend`, `supplementary material not publicly accessible`, and `interpretation based on the authors' explanation`.
 
 ## Embedded report template
 
@@ -171,10 +171,10 @@ tags:
 
 - **Knowledge gap / hypothesis:**
 - **Study design:**
-- **Causal chain:** question → model/cohort → observation → validation → implication
+- **Causal chain:** question -> model/cohort -> observation -> validation -> implication
 - **Model-fit assessment:** what is captured, absent, and not distinguishable.
 
-#### 5. Claim–evidence map
+#### 5. Claim-evidence map
 
 | Major claim | Direct evidence | Figure(s) | Evidence level | Boundary / caveat |
 |---|---|---|---|---|
@@ -190,7 +190,7 @@ tags:
 
 Repeat for every reviewed main, extended, and supplementary figure.
 
-##### Figure X — [short title]
+##### Figure X - [short title]
 
 **One-sentence message:** Figure X [does what] and therefore [supports which part of the paper's argument].
 
@@ -206,7 +206,7 @@ Repeat for every reviewed main, extended, and supplementary figure.
 
 **Figure conclusion:** What this figure establishes; what it supports only partially; what it does not establish.
 
-> **Important concept — [term]:** Definition; role in this paper; interpretive caution.
+> **Important concept - [term]:** Definition; role in this paper; interpretive caution.
 
 #### 8. Relevance to ongoing research
 
