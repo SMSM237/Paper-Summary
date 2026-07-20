@@ -1,11 +1,13 @@
 ---
 name: paper-summary
-description: Produce a rigorous, readable Korean-first review of a scientific paper PDF, with verified bibliographic metadata and DOI, direct figure and panel interpretation, supplementary-material retrieval, methods extraction, translational relevance, and peer-review critique. Use when asked to summarize, explain, critically evaluate, or connect biomedical, life-science, clinical, organoid, MPS, drug-response, or multi-omics papers to ongoing research.
+description: Produce a rigorous Korean-language review of a scientific paper PDF, with verified bibliographic metadata and DOI, figure screenshots embedded directly in Markdown, panel-level interpretation, supplementary-material retrieval, methods extraction, translational relevance, and peer-review critique. Use when asked to summarize, explain, critically evaluate, or connect biomedical, life-science, clinical, organoid, MPS, drug-response, or multi-omics papers to ongoing research.
 ---
 
 # Paper Summary
 
-Create a source-grounded reading report, not a paraphrase of the abstract. Preserve the distinction between what the data show, what the authors infer, and what remains unproven. Default to Korean when the request is Korean; preserve technical terms in English where that improves precision.
+Create a source-grounded reading report, not a paraphrase of the abstract. Preserve the distinction between what the data show, what the authors infer, and what remains unproven.
+
+Write every user-facing heading, paragraph, table label, figure caption, critique, limitation, and conclusion in Korean. This is mandatory even when the paper and prompt are in English, unless the user explicitly requests another output language. Preserve gene names, protein names, drug names, assay names, quoted labels, and standard technical terms in English when translation would reduce precision. The embedded template is written in English only for installer compatibility; translate every user-facing template element into Korean in the actual report.
 
 ## Start with inputs and scope
 
@@ -16,6 +18,18 @@ Create a source-grounded reading report, not a paraphrase of the abstract. Prese
 5. State the analysis boundary up front: materials reviewed, materials unavailable, and any figure or page whose resolution prevents reliable reading.
 
 Use the PDF skill for text extraction, rendering, and visual checks when it is available. Read the actual figure pages at sufficient resolution; legends, OCR, and extracted text are aids rather than substitutes for inspecting panels, axes, scale bars, labels, images, and statistical annotations.
+
+## Capture and embed every figure
+
+Capture each reviewed figure directly from the paper PDF and embed it in the Markdown report. Apply this to every available main figure and to each reviewed extended-data or supplementary figure.
+
+1. Render the source page at sufficient resolution for panel labels, axes, legends, and scale bars to remain readable. Increase resolution or use multiple crops when a full figure becomes illegible at normal report width.
+2. Crop to the actual figure boundary. Exclude page headers, unrelated body text, and viewer controls when possible. Do not alter, redraw, recolour, or otherwise change the scientific content.
+3. Save every capture in the same directory as the Markdown report. Do not create an `assets/`, `images/`, or other dedicated image folder.
+4. Use stable ASCII filenames such as `figure-01.png`, `figure-02-part-1.png`, `extended-data-01.png`, and `supplementary-figure-01.png`.
+5. Insert the image immediately below its Figure heading and before the one-sentence message and panel analysis. For a saved report, use a same-directory relative link such as `![Figure 1](./figure-01.png)`. When delivering the report directly in Codex chat, use the image's absolute local path so the app can render it, such as `![Figure 1](/absolute/path/to/figure-01.png)`.
+6. Verify that every Markdown image link resolves and that the displayed capture corresponds to the correct figure number. Do not use base64 data URIs unless the user explicitly asks for a single-file document.
+7. If a figure cannot be captured, state the exact reason in Korean at the intended image location. Do not substitute an image from a secondary source without explicit disclosure.
 
 ## Retrieve supplementary material deliberately
 
@@ -66,7 +80,7 @@ Classify support as descriptive observation, association, functional association
 
 ### 3. Read every figure as an argument
 
-For each main figure, and for extended/supplementary figures when available, follow the embedded report template below. Start with one sentence that says what the figure establishes and how it advances the whole paper.
+For each main figure, and for extended/supplementary figures when available, follow the embedded report template below. Place the captured figure image first, then state in one Korean sentence what the figure establishes and how it advances the whole paper.
 
 For each panel, identify purpose, experimental system and condition, measurement, axes/scale/colours/groups, direct observation, author interpretation, justified inference, limitation, and transition to the next panel. Then explicitly explain how the panels combine into the figure-level conclusion. Treat representative images as illustrative unless independently quantified with suitable sampling and replication.
 
@@ -104,8 +118,11 @@ Put the conclusion before detail. Use tables for repeated fields, bullets for de
 
 Before delivering, verify and report:
 
+- All user-facing report content is written in Korean unless the user explicitly requested another language.
 - Bibliographic metadata and DOI were checked against a cited trustworthy source, or are explicitly unresolved.
 - Main, extended, and supplementary figures/tables were inventoried; each item is marked reviewed, unavailable, or not applicable.
+- Every reviewed figure has a PDF-derived capture embedded immediately below its heading, or an explicit Korean explanation of why capture was impossible.
+- Figure image files are stored beside the Markdown report, no dedicated asset/image folder was created, and every Markdown image link resolves to the correct capture.
 - Every reported figure has a one-sentence message, panel interpretation, panel-to-panel logic, and stated evidence boundary.
 - Concepts appear next to the conclusion they enable.
 - Claims, author interpretation, and reviewer inference are visibly separated.
@@ -191,6 +208,8 @@ tags:
 Repeat for every reviewed main, extended, and supplementary figure.
 
 ##### Figure X - [short title]
+
+![Figure X](./figure-x.png)
 
 **One-sentence message:** Figure X [does what] and therefore [supports which part of the paper's argument].
 
