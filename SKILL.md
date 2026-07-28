@@ -1,304 +1,165 @@
 ---
 name: paper-summary
-description: Produce a rigorous Korean-led review of a scientific paper PDF, with verified bibliographic metadata and DOI, figure screenshots embedded directly in Markdown, panel-level interpretation, supplementary-material retrieval, methods extraction, translational relevance, and peer-review critique. Use when asked to summarize, explain, critically evaluate, or connect biomedical, life-science, clinical, organoid, MPS, drug-response, or multi-omics papers to ongoing research.
+description: Build a rigorous Korean-led Obsidian knowledge package for a scientific paper, organized as linked multi-note files with verified metadata, dedicated background and methods notes, concept and method deep-dives, one detailed note per main/extended/supplementary figure, panel-by-panel interpretation, reproducibility audit, critical review, and research applications. Use when asked to summarize, explain, critically evaluate, or organize biomedical, life-science, clinical, organoid, MPS, drug-response, imaging, AI, or multi-omics papers from PDFs, links, or supplementary materials.
 ---
 
 # Paper Summary
 
-Create a source-grounded reading report, not a paraphrase of the abstract. Preserve the distinction between what the data show, what the authors infer, and what remains unproven.
+Create a source-grounded **paper atlas**, not one long abstract-like summary. Make the result useful at two scales: a fast overview and a linked knowledge base that supports deep reading.
 
-Use Korean as the primary language for substantive interpretation: main findings, logical connections, figure and panel interpretation, critique, limitations, research applications, and conclusions. Mix English naturally for technical terms, gene/protein/drug names, assay and statistical terminology, quoted labels, abbreviations, and expressions whose translation would reduce precision. Do not force awkward Korean translations of standard scientific language. Use Korean headings and table labels where natural, while retaining conventional English labels when they are clearer. If the user explicitly requests another output language, follow that request. The embedded template is written in English for installer compatibility; adapt it into clear Korean-led output rather than translating every technical expression literally.
+Use Korean for substantive explanation. Retain precise English terminology for genes, proteins, drugs, assays, algorithms, statistics, and figure labels. Separate direct observation, author interpretation, reviewer inference, and unverified hypothesis.
 
-## Start with inputs and scope
+## Read the required references
 
-1. Inventory every supplied item: main PDF, supplementary PDF, extended-data PDF, supplementary tables/data, DOI/link, and user research context. Record the filenames and access date in the report.
-2. Identify the paper from PDF metadata and the first pages: title, authors, journal, year, and any DOI string. Confirm the identity with the title and author list before searching externally.
-3. Verify bibliographic metadata and DOI from the most authoritative available source, preferring the publisher or journal page, then DOI resolution/Crossref, PubMed, PMC/Europe PMC, or a trusted institutional record. Never invent a DOI. If sources disagree, report the discrepancy and use the publisher record as the primary reference when available.
-4. List every main, extended-data, and supplementary figure/table mentioned in the paper before analysis. This is the coverage checklist.
-5. State the analysis boundary up front: materials reviewed, materials unavailable, and any figure or page whose resolution prevents reliable reading.
+Before creating output:
 
-Use the PDF skill for text extraction, rendering, and visual checks when it is available. Read the actual figure pages at sufficient resolution; legends, OCR, and extracted text are aids rather than substitutes for inspecting panels, axes, scale bars, labels, images, and statistical annotations.
+1. Read [references/output-architecture.md](references/output-architecture.md) completely.
+2. Read [references/figure-note-schema.md](references/figure-note-schema.md) completely whenever the paper contains figures.
+3. Read [references/concept-method-notes.md](references/concept-method-notes.md) completely whenever load-bearing concepts or methods require dedicated notes.
+4. Read [references/markdown-integrity.md](references/markdown-integrity.md) completely for every saved Markdown package.
 
-## Capture and embed every figure
+## Establish the evidence boundary
 
-Capture each reviewed figure directly from the paper PDF and embed it in the Markdown report. Apply this to every available main figure and to each reviewed extended-data or supplementary figure.
+1. Inventory the main PDF, supplements, extended data, tables, data/code links, DOI, and user research context.
+2. Identify title, authors, journal, year, DOI, and article type from the paper itself.
+3. Verify bibliographic metadata against the publisher or journal page; use DOI/Crossref, PubMed, PMC/Europe PMC, or an institutional record only as needed.
+4. Build a coverage manifest before writing: every main, extended-data, and supplementary figure/table must be listed as `reviewed`, `unavailable`, `unreadable`, or `not applicable`.
+5. State unavailable evidence and its impact. Never imply that an inaccessible supplement was reviewed.
 
-1. Render the source page at sufficient resolution for panel labels, axes, legends, and scale bars to remain readable. Increase resolution or use multiple crops when a full figure becomes illegible at normal report width.
-2. Crop to the actual figure boundary. Exclude page headers, unrelated body text, and viewer controls when possible. Do not alter, redraw, recolour, or otherwise change the scientific content.
-3. Save every capture in the same directory as the Markdown report. Do not create an `assets/`, `images/`, or other dedicated image folder.
-4. Use stable ASCII filenames such as `figure-01.png`, `figure-02-part-1.png`, `extended-data-01.png`, and `supplementary-figure-01.png`.
-5. Insert the image immediately below its Figure heading and before the one-sentence message and panel analysis. For a saved report, use a same-directory relative link such as `![Figure 1](./figure-01.png)`. When delivering the report directly in Codex chat, use the image's absolute local path so the app can render it, such as `![Figure 1](/absolute/path/to/figure-01.png)`.
-6. Verify that every Markdown image link resolves and that the displayed capture corresponds to the correct figure number. Do not use base64 data URIs unless the user explicitly asks for a single-file document.
-7. If a figure cannot be captured, state the exact reason clearly at the intended image location, using Korean as the main explanatory language and English technical terms where useful. Do not substitute an image from a secondary source without explicit disclosure.
+Use the PDF skill for extraction, rendering, and visual inspection when available. Inspect the actual panels, axes, scale bars, group labels, legends, and statistical annotations. Text extraction and OCR support inspection but do not replace it.
 
-## Retrieve supplementary material deliberately
+## Reconstruct the paper before splitting notes
 
-When supplementary material is not supplied, attempt legitimate public routes in this order, documenting each successful or failed route:
+Build a private evidence map first:
 
-1. Publisher/journal article page and its supplementary/extended-data links.
-2. The DOI landing page and journal-hosted asset links.
-3. PMC or Europe PMC full text and associated files.
-4. Preprint servers, institutional repositories, or an openly available author manuscript.
-5. Public data/accession repositories explicitly cited in the paper.
+`knowledge gap -> question/hypothesis -> model/cohort -> observation -> mechanism candidate -> perturbation/validation -> implication`
 
-Download and analyze public supplementary PDFs, figures, tables, and data that are relevant and accessible. Do not bypass paywalls, access controls, or terms of use. If material remains unavailable, list: item, routes tried, outcome, and which conclusions cannot be checked without it. Do not claim that unavailable supplementary data were reviewed.
+Record:
 
-## Use resilient document inspection
+- biological and computational unit of analysis;
+- patient/donor/model count separately from devices, wells, images, cells, fields, and technical repeats;
+- controls, perturbations, endpoints, and time points;
+- which claims are observation, association, functional evidence, causal evidence, independent replication, or clinical validation;
+- which concepts and methods are prerequisites for understanding the results.
 
-Do not stop at the first parser failure. Use only the methods needed to resolve a real problem, and log the method that produced the usable evidence.
+Use calibrated language:
 
-| Problem | Escalation path |
-|---|---|
-| Text extraction fails | Try a second PDF parser; inspect embedded metadata; render relevant pages; use OCR on rendered pages. |
-| Figures are unclear | Render the original page at higher resolution; crop/zoom the panel; compare with legend and Results text. |
-| DOI is missing | Search exact title plus first/last author; search title variants and journal/year; query trusted bibliographic indexes. |
-| Supplement links fail | Recheck the publisher record, DOI page, PMC/Europe PMC, preprint/repository records, and cited accessions. |
-| Panel labels or statistics remain unreadable | State the limitation exactly; do not reconstruct labels or numbers from context. |
+- **보여준다**: directly measured.
+- **지지한다**: convergent evidence is consistent with the claim.
+- **시사한다**: plausible but not directly established.
+- **저자들은 제안한다**: interpretation extends beyond direct evidence.
 
-When a conclusion depends on an unresolved item, downgrade the claim rather than filling the gap with plausible detail.
+## Create a multi-note paper atlas
 
-## Analyze the paper in evidence order
+Create one folder per paper. Do not default to a single monolithic Markdown file.
 
-### 1. Reconstruct the study logic
+- Put numbered Markdown notes in the paper folder.
+- Put PDF-derived figure crops only in `assets/`.
+- Create `00_Index.md` as the navigation hub.
+- Create separate Overview, Background, Methods, Figure, Critical Review, Research Application, Reproducibility, and Source/Coverage notes.
+- Create concept or method deep-dive notes only when they materially improve understanding; do not create a note for every gene or acronym.
+- Assign numeric prefixes by reading order, not by a rigid universal count.
+- Use ASCII filenames and concise topic slugs; Korean prose may remain inside the notes.
+- Connect related notes with Obsidian wiki links and include backlinks to `[[00_Index]]`.
+- Write UTF-8 Markdown that obeys the MathJax, escaping, image, and filename rules in `references/markdown-integrity.md`.
 
-Identify the knowledge gap, hypothesis, biological/clinical question, samples and models, controls, cohort design, assays, endpoints, and causal chain. Express the chain compactly:
+Follow the exact architecture and naming rules in `references/output-architecture.md`.
 
-`question -> model/cohort -> observation -> mechanism candidate -> perturbation/validation -> translational implication`
+## Promote concepts into deep-dive notes
 
-Evaluate model fitness for the question. Distinguish tumour-intrinsic effects from microenvironment-, immune-, vascular-, or pharmacokinetic-dependent effects. For patient-derived systems, keep patient count, model count, technical replicate count, and independent validation cohorts separate.
+Create a dedicated concept note when at least one condition holds:
 
-### 2. Build claim-to-evidence links
+1. The concept is load-bearing for a central claim.
+2. It appears in multiple figures or sections.
+3. Misunderstanding it would change interpretation.
+4. It is directly relevant to the user's research.
+5. It requires external background beyond what the paper explains.
 
-For every major conclusion, map the direct data, figure(s), evidence level, and caveat. Use these calibrated terms consistently:
+Examples include EMT, MSI, antibody–drug conjugate bystander effect, cGAN versus GAN, U-Net, spatial transcriptomics, hazard ratio, organ-on-chip shear stress, or ECM stiffness.
 
-- **shows**: directly measured in the reported data.
-- **supports**: convergent evidence is consistent with the conclusion.
-- **suggests**: plausible but not directly established.
-- **authors propose**: interpretation exceeds, or is not fully matched by, the direct evidence.
+Introduce the concept briefly at first use and link to the deep note. In the deep note, explain definition, mechanism or algorithm, role in this paper, evidence locations, assumptions, common confusions, limits, and research relevance. Cite external primary or authoritative sources separately from the focal paper.
 
-Classify support as descriptive observation, association, functional association, causal evidence, independent replication, or clinical validation. Correlation, expression association, and a single model should not be represented as mechanism or general clinical utility.
+Do not use a concept note to inflate the report. Merge overlapping terms and keep project-specific interpretation traceable to the paper.
 
-### 3. Read every figure as an argument
+## Treat each figure as a self-contained scientific argument
 
-For each main figure, and for extended/supplementary figures when available, follow the embedded report template below. Place the captured figure image first, then state primarily in Korean what the figure establishes and how it advances the whole paper, using English technical terms where they improve precision.
+Create one note for every reviewed main figure. Create one note for each reviewed extended or supplementary figure unless the user explicitly requests a shorter appendix.
 
-For each panel, identify purpose, experimental system and condition, measurement, axes/scale/colours/groups, direct observation, author interpretation, justified inference, limitation, and transition to the next panel. Then explicitly explain how the panels combine into the figure-level conclusion. Treat representative images as illustrative unless independently quantified with suitable sampling and replication.
+For each figure:
 
-Place a short **Important concept** note immediately after the first result whose interpretation requires it. Give the definition, the paper-specific role, and the key interpretive caution. Maintain a compact concept index only as a navigation aid; do not make readers search the document for essential definitions.
+1. Capture the original figure from the PDF at readable resolution and save it under `assets/`.
+2. Place the image near the top of the figure note.
+3. State one Korean sentence that identifies the figure's scientific topic and its role in the paper.
+4. Explain why the figure appears at this point in the argument.
+5. Analyze every labelled panel and meaningful subpanel.
+6. Describe the panel's question, model/sample, condition/control, measurement, visual encoding, direct observation, justified interpretation, statistics, limitation, and transition to the next panel.
+7. Explain the panel-to-panel logic rather than listing panels independently.
+8. End with what the figure establishes, supports only partially, and does not establish.
+9. Link prerequisite concept and method notes.
 
-### 4. Check statistics, reproducibility, and methods
+Use the complete schema in `references/figure-note-schema.md`. A phrase such as “패널 a는 실험 모식도다” is insufficient unless followed by what is being compared, why that design is necessary, and how it frames the later panels.
 
-Assess the unit of analysis, biological versus technical replicates, `n` definition, controls, randomization/blinding where relevant, effect size and uncertainty, individual data display, test selection, multiple-testing control, pre-specified thresholds, missing-data handling, batch effects, and external validation. Do not condemn a study merely for a modest sample size; judge adequacy against the biological unit, effect size, and stated claim.
+Treat representative images as illustrative unless suitable independent quantification accompanies them. If a label or statistic is unreadable, mark it as such instead of reconstructing it.
 
-Extract reproducibility-critical details without guessing: models/patients, inclusion/exclusion, culture matrix and medium, seeding density, drugs and concentrations, exposure time, assay endpoint, imaging and antibody/marker settings, preprocessing and software, statistics, repository accessions, and code/data availability. Mark absent information as `not reported`, translated into the report's output language.
+When a formula cannot be transcribed reliably, preserve it as a readable PDF-derived crop and mark the transcription as unresolved. Never replace an unreadable symbol with a plausible one.
 
-### 5. Translate, critique, and propose
+## Separate Methods overview from method deep-dives
 
-Connect findings only when scientifically justified to the user's work in large patient cohorts, organoids/PDC/PDO, MPS, in-vitro drug screening, multi-omics/spatial analysis, ADCs, and immunotherapy. Separate:
+In the Methods note, reconstruct the full experimental workflow and extract reproducibility-critical details:
 
-- **Immediate**: analyses or readouts feasible with existing data/materials.
-- **Conditional**: work needing a new assay, cohort, collaboration, or MPS redesign.
-- **Strategic**: a future biomarker, validation, or precision-oncology programme.
+- cohort/model and inclusion/exclusion;
+- matrix/substrate/device material and geometry;
+- cell source, seeding density, medium, exposure, drug concentration, and time;
+- controls and perturbations;
+- imaging/assay settings, markers, preprocessing, software, and versions;
+- statistics, batch handling, missing data, repositories, and code.
 
-For a relevant proposal specify question, samples/data, design, controls, expected readout, scientific value, primary risk, and a sensible manuscript figure location. In drug studies, do not infer IC50 from a single concentration; specify whether evidence is single-point, dose-response, time course, or combination-matrix based. In multi-omics/spatial work, label associations as associations unless perturbation or an appropriate causal design supports more.
+Create a method deep-dive for a technique whose assumptions determine interpretation, such as RNAscope, scRNA-seq integration, cGAN, U-Net, spatial deconvolution, dose-response modeling, or vascular perfusion measurement. Follow `references/concept-method-notes.md`.
 
-Write a reviewer-style assessment with major comments first. Each major comment must contain: the issue, why it matters to the central claim, what the current data establish, the minimum decisive experiment/analysis, and how possible outcomes would change interpretation. Prioritize each request as required, recommended, or optional. Give an editorial assessment only after showing its evidence basis.
+Mark missing details as `논문 및 범례에 보고되지 않음`.
 
-## Write for two reading depths
+## Critique and connect without overclaiming
 
-Use the YAML frontmatter and full reporting structure embedded below. Keep the report navigable:
+In `Critical_Review`, prioritize claim-changing issues. For each major issue state:
 
-1. **Core**: title/metadata, one-sentence conclusion, five key takeaways, study logic, claim-evidence table, and concise verdict.
-2. **Deep dive**: figure-by-figure and panel-by-panel interpretation, concepts placed in context, application ideas, and critical review.
-3. **Appendix**: methods/reproducibility extraction, statistics detail, concept index, source/access log, and coverage audit.
+- why it matters;
+- what the current data establish;
+- the minimum decisive experiment or analysis;
+- how positive and negative outcomes would change interpretation;
+- priority: required, recommended, or optional.
 
-Put the conclusion before detail. Use tables for repeated fields, bullets for decision points, and nested headings or `<details>` for panel-level depth. Remove duplicated explanations; link back to an earlier concept rather than redefining it. A long paper may require a long appendix, but the Core should remain independently intelligible.
+In `Our_Research_Application`, separate:
 
-## Mandatory final quality gate
+- **Immediate**: feasible with existing data/materials;
+- **Conditional**: needs a new assay, cohort, collaboration, or device redesign;
+- **Strategic**: future validation or precision-medicine program.
 
-Before delivering, verify and report:
+For each proposal specify question, samples/data, experimental unit, design, controls, readout, scientific value, main risk, and sensible manuscript figure placement. Do not infer IC50 from single-point data or mechanism from association alone.
 
-- Main interpretations, logical explanations, critiques, applications, and conclusions are Korean-led; English is used where it is technically precise, conventional, or clearer.
-- Bibliographic metadata and DOI were checked against a cited trustworthy source, or are explicitly unresolved.
-- Main, extended, and supplementary figures/tables were inventoried; each item is marked reviewed, unavailable, or not applicable.
-- Every reviewed figure has a PDF-derived capture embedded immediately below its heading, or a clear Korean-led explanation of why capture was impossible.
-- Figure image files are stored beside the Markdown report, no dedicated asset/image folder was created, and every Markdown image link resolves to the correct capture.
-- Every reported figure has a one-sentence message, panel interpretation, panel-to-panel logic, and stated evidence boundary.
-- Concepts appear next to the conclusion they enable.
-- Claims, author interpretation, and reviewer inference are visibly separated.
-- Quantitative details, labels, and experimental conditions were not fabricated.
-- Supplementary retrieval attempts and access limitations are recorded.
-- Research connections and proposed experiments are proportional to the actual evidence.
-- The report includes a figure-coverage count, such as `Main 6/6; Extended Data 4/5; Supplementary 8/12`, with reasons for omissions.
+## Validate before delivery
 
-## Output and citation rules
+Run:
 
-Use an Obsidian-compatible Markdown file with YAML frontmatter. Cite the paper and external metadata/supplement sources as direct links near the relevant claim. Clearly distinguish information obtained from the paper from external context. Use the following canonical uncertainty labels, translated into the report's output language when appropriate: `unreadable at PDF resolution`, `not reported in the text or legend`, `supplementary material not publicly accessible`, and `interpretation based on the authors' explanation`.
-
-## Embedded report template
-
-Use this template for the output report. Omit a section only when it is genuinely inapplicable, and state why. Keep the **Core** readable without opening the deeper sections.
-
-```yaml
----
-title: ""
-authors: []
-journal: ""
-year:
-doi: ""
-paper_type: []
-cancer_type: []
-model_system: []
-data_types: []
-key_topics: []
-materials_reviewed: []
-materials_unavailable: []
-review_status: completed
-tags:
-  - paper-summary
-  - literature-review
----
+```text
+python scripts/validate_report_package.py <paper-folder> --expected-main N --expected-extended N --expected-supplementary N
 ```
 
-### Core
+Use only counts that were established by the coverage manifest. Fix every validation error. Review warnings and either resolve them or disclose why they remain.
 
-#### 1. Paper at a glance
+Then verify manually:
 
-| Field | Verified information |
-|---|---|
-| Title / authors / journal / year | |
-| DOI and verification source | |
-| Study type / disease / model | |
-| Materials reviewed | |
-| Materials unavailable and impact | |
+- `00_Index.md` links to every note in reading order;
+- every reviewed figure has the correct PDF-derived capture;
+- every panel label in the source has a corresponding explanation;
+- concept links resolve and essential definitions remain understandable at first use;
+- claims, numbers, conditions, and DOI are directly supported;
+- the true experimental unit is not replaced by nested observations;
+- the Core notes remain useful without opening every deep-dive;
+- the source/coverage note reports exact reviewed and unavailable counts.
+- Markdown files decode as UTF-8 without replacement characters and are NFC-normalized;
+- inline and block MathJax delimiters are balanced;
+- table pipes, underscores, angle brackets, and backslashes are escaped or placed in code/math contexts correctly;
+- image names are ASCII without spaces, every image has useful alt text, and every image link resolves with exact filename case;
+- final Index, one concept/method note, and at least one dense Figure note render correctly in an Obsidian-compatible preview.
 
-#### 2. One-sentence conclusion
-
-> **This paper shows/supports/suggests that [system] [main finding], with [biological, clinical, or technical implication].**
-
-#### 3. Five things to remember
-
-1. Core discovery.
-2. Strongest evidence.
-3. Key mechanism or biological interpretation.
-4. Main limitation.
-5. Most actionable research connection.
-
-#### 4. Research question and logic
-
-- **Knowledge gap / hypothesis:**
-- **Study design:**
-- **Causal chain:** question -> model/cohort -> observation -> validation -> implication
-- **Model-fit assessment:** what is captured, absent, and not distinguishable.
-
-#### 5. Claim-evidence map
-
-| Major claim | Direct evidence | Figure(s) | Evidence level | Boundary / caveat |
-|---|---|---|---|---|
-| | | | observation / association / functional / causal / replication / clinical | |
-
-#### 6. Bottom line
-
-> **[Major value], but [main limitation]; interpret the central claim as extending no further than [supported scope].**
-
-### Deep dive
-
-#### 7. Figure-by-figure analysis
-
-Repeat for every reviewed main, extended, and supplementary figure.
-
-##### Figure X - [short title]
-
-![Figure X](./figure-x.png)
-
-**One-sentence message:** Figure X [does what] and therefore [supports which part of the paper's argument].
-
-**Role in the paper:** discovery / model validation / mechanism / functional causality / clinical link / generalization.
-
-| Panel | Purpose and design | Direct observation | Interpretation and evidence boundary | Link to next panel |
-|---|---|---|---|---|
-| X-a | model, condition, readout, axes/scale | | author interpretation; justified inference; limitation | |
-
-**Panel-to-panel logic:** Explain how the ordered evidence arrives at the figure conclusion.
-
-**Statistics and visual evidence:** `n` unit, biological/technical replicates, test, correction, effect/uncertainty, image quantification, and unresolved details.
-
-**Figure conclusion:** What this figure establishes; what it supports only partially; what it does not establish.
-
-> **Important concept - [term]:** Definition; role in this paper; interpretive caution.
-
-#### 8. Relevance to ongoing research
-
-| Priority | Opportunity | Question / design / controls | Needed samples or data | Readout and value | Risk / boundary |
-|---|---|---|---|---|---|
-| Immediate / Conditional / Strategic | cohort, PDO/PDC, MPS, screening, multi-omics/spatial, ADC, immunotherapy | | | | |
-
-#### 9. Strengths and limitations
-
-Separate design, model, analysis/statistics, interpretation, and reproducibility limitations. Identify evidence rather than relying on generic criticism.
-
-#### 10. Peer-review assessment and revision plan
-
-**Overall assessment:** novelty, completeness, claim-evidence alignment, likely impact, and editorial judgement.
-
-##### Major comments
-
-1. **Issue:**
-   - **Why it matters:**
-   - **What current data establish:**
-   - **Minimum decisive revision:**
-   - **Interpretation if positive/negative:**
-   - **Priority:** required / recommended / optional
-
-##### Minor comments
-
-- Statistics, labels, terminology, legends, reporting, or supplementary placement.
-
-#### 11. Additional experiments or analyses
-
-| Priority | Claim tested | Design and controls | Expected readout | Interpretation by outcome | Feasibility |
-|---|---|---|---|---|---|
-
-### Appendix
-
-#### A. Reproducibility extraction
-
-| Category | Reported detail | Source location | Missing or ambiguous information |
-|---|---|---|---|
-| Cohort/model | | | |
-| Culture and matrix | | | |
-| Drug and exposure | | | |
-| Assay/imaging/markers | | | |
-| Analysis software/statistics | | | |
-| Data/code/accession | | | |
-
-#### B. Statistics and reproducibility audit
-
-- Unit of analysis and independence:
-- Replicate structure and `n` definition:
-- Control, blinding/randomization, missing data, batch handling:
-- Multiple testing and threshold choice:
-- Data/code/material availability:
-
-#### C. Important concept index
-
-| Concept | Where introduced | Paper-specific meaning and caution |
-|---|---|---|
-
-#### D. Source and access log
-
-| Item | Source or route | Status | What it enabled or limited |
-|---|---|---|---|
-| DOI metadata | publisher / DOI / Crossref / PubMed | verified / unresolved | |
-| Supplementary PDF / table / data | routes attempted | reviewed / unavailable | |
-
-#### E. Coverage audit
-
-| Material class | Found | Reviewed | Unavailable / unreadable | Reason |
-|---|---:|---:|---:|---|
-| Main figures | | | | |
-| Extended Data | | | | |
-| Supplementary figures | | | | |
-| Supplementary tables/data | | | | |
-
-**Final anti-hallucination check:** Do not state any panel, value, label, experimental condition, DOI, or supplementary item as verified unless directly observed in the paper/material or supported by the cited metadata source.
+Deliver the paper folder path, the Index path, validation result, coverage counts, and unresolved limitations.
